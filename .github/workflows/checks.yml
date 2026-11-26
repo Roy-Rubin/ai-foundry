@@ -6,9 +6,17 @@ on:
 
 jobs:
   smoke:
-    name: Placeholder smoke test
+    name: Research workflow tests
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Run offline research tests
+        env:
+          PYTHONPATH: src
+        run: python -m unittest discover -s tests -v
       - name: Check a mock result
         run: |
           python3 - <<'PY'

@@ -1,0 +1,5 @@
+<feed xmlns="http://www.w3.org/2005/Atom">
+<entry><id>http://arxiv.org/abs/2611.12345v1</id><title>Example research</title><summary>A sample contribution with an explicitly stated result.</summary><published>2026-11-25T12:00:00Z</published></entry>
+<entry><id>http://arxiv.org/abs/2611.12345v2</id><title>Example research revised</title><summary>A revised abstract.</summary><published>2026-11-25T12:00:00Z</published></entry>
+<entry><id>http://arxiv.org/abs/2611.12346</id><title>Another study</title><summary>A second abstract.</summary><published>2026-11-24T12:00:00Z</published></entry>
+</feed>
