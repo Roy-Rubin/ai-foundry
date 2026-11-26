@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "ai-foundry"
 version = "0.1.0"
 description = "AI research update workflows"
-requires-python = ">=3.10"
+requires-python = ">=3.12,<3.13"
 
 [project.scripts]
 ai-updates = "ai_foundry.projects.ai_updates.main:main"
