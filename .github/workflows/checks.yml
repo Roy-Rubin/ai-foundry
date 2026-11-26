@@ -1,1 +1,20 @@
-# Placeholder for automated checks.
+name: Checks
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  smoke:
+    name: Placeholder smoke test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check a mock result
+        run: |
+          python3 - <<'PY'
+          from unittest.mock import Mock
+
+          check = Mock(return_value=True)
+          assert check() is True
+          check.assert_called_once_with()
+          PY
