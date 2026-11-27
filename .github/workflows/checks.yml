@@ -1,1 +1,26 @@
-# Placeholder for automated checks.
+name: Checks
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  smoke:
+    name: Research workflow tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+      - name: Install Python and sync environment
+        run: uv sync --locked
+      - name: Run offline research tests
+        run: uv run --locked python -m unittest discover -s tests -v
+      - name: Check a mock result
+        run: |
+          uv run --locked python - <<'PY'
+          from unittest.mock import Mock
+
+          check = Mock(return_value=True)
+          assert check() is True
+          check.assert_called_once_with()
+          PY

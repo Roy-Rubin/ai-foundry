@@ -1,0 +1,29 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "AI Updates: Run once",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "ai_foundry.projects.ai_updates.main",
+            "python": "${workspaceFolder}/.venv/bin/python",
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "envFile": "${workspaceFolder}/.env",
+            "justMyCode": true,
+            "args": []
+        },
+        {
+            "name": "AI Updates: Run once (mock)",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "ai_foundry.projects.ai_updates.main",
+            "python": "${workspaceFolder}/.venv/bin/python",
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "envFile": "${workspaceFolder}/.env",
+            "justMyCode": true,
+            "args": ["--mock"]
+        }
+    ]
+}
