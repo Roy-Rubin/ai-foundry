@@ -2,11 +2,10 @@
 
 from datetime import datetime, timedelta, timezone
 
-from ai_foundry.core.storage.base import SQLiteDatabase
 from ..agents.summarizer import Summarizer
 from ..config import UpdateConfig
-from ..history import HistoryRepository
-from ..models import Paper, PaperSummary
+from ..db.dal import UpdateDataAccess
+from ..db.models import Paper, PaperSummary
 from ..reports.markdown import ReportRenderer
 from ..sources.papers import ArxivSource
 
@@ -43,24 +42,18 @@ class UpdateWorkflow:
         """
         # Reserve the history before selecting unseen papers.
         config.validate()
-        database: SQLiteDatabase = SQLiteDatabase(config.history_path)
-        try:
-            history: HistoryRepository = HistoryRepository(database)
-            database.begin()
+        data_access: UpdateDataAccess = UpdateDataAccess(config.history_path)
+        with data_access:
             now: datetime = datetime.now(timezone.utc)
             cutoff: datetime = now - timedelta(days=config.lookback_days)
-            reported_ids: set[str] = history.reported_ids()
+            reported_ids: set[str] = data_access.history.reported_ids()
             papers: list[Paper] = self.source.find(config.query, cutoff, now, reported_ids, config.limit)
             if not papers:
-                database.commit()
-                return 0
+                count: int = 0
+                return count
             # Publish both outputs before committing reported IDs.
             summaries: list[PaperSummary] = [self.summarizer.summarize(paper) for paper in papers]
             self.renderer.publish(summaries, config.mock, config.report_directory)
-            history.record(summaries)
-            database.commit()
-            count: int = len(summaries)
+            data_access.history.record(summaries)
+            count = len(summaries)
             return count
-        finally:
-            # Closing rolls back failed transactions and releases reservations.
-            database.close()

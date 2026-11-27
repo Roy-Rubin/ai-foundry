@@ -8,7 +8,7 @@ from urllib.request import Request
 from xml.etree import ElementTree
 
 from ai_foundry.core.sources.http import HttpClient
-from ..models import Paper
+from ..db.models import Paper
 
 ATOM: dict[str, str] = {"atom": "http://www.w3.org/2005/Atom"}
 PAGE_SIZE: int = 100

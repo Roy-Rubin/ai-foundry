@@ -3,7 +3,7 @@
 from pathlib import Path
 
 from ai_foundry.core.llm.client import TextClient
-from ..models import Paper, PaperSummary
+from ..db.models import Paper, PaperSummary
 
 
 class Summarizer:

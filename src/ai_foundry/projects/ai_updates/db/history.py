@@ -1,12 +1,12 @@
-"""Project history repository built on the SQLite DAL."""
+"""SQL access to successfully reported papers."""
 
 from datetime import datetime, timezone
 
-from ai_foundry.core.storage.base import SQLiteDatabase
+from ai_foundry.core.db.sqlite import SQLiteDatabase
 from .models import PaperSummary
 
 
-class HistoryRepository:
+class ReportHistoryStore:
     """Recall reported IDs and record completed reports."""
 
     def __init__(self, database: SQLiteDatabase) -> None:
@@ -32,6 +32,9 @@ class HistoryRepository:
 
         Returns:
             Previously reported unversioned IDs.
+
+        Raises:
+            sqlite3.Error: If reading history fails.
         """
         # Convert storage rows to the domain representation.
         identifiers: set[str] = {
@@ -51,6 +54,7 @@ class HistoryRepository:
         # Use parameterized SQL and tolerate duplicate IDs.
         reported_at: str = datetime.now(timezone.utc).isoformat()
         self.database.connection.executemany(
-            "INSERT OR IGNORE INTO reported_papers VALUES (?, ?, ?, ?)",
+            "INSERT OR IGNORE INTO reported_papers (arxiv_id, title, summary, reported_at) "
+            "VALUES (?, ?, ?, ?)",
             [(entry.paper.identifier, entry.paper.title, entry.summary, reported_at) for entry in summaries],
         )

@@ -14,12 +14,12 @@ from urllib.request import Request
 
 from ai_foundry.core.llm.client import MockTextClient, OpenAITextClient
 from ai_foundry.core.sources.http import HttpClient
-from ai_foundry.core.storage.base import SQLiteDatabase
+from ai_foundry.core.db.sqlite import SQLiteDatabase
 from ai_foundry.projects.ai_updates.agents.summarizer import Summarizer
 from ai_foundry.projects.ai_updates.config import UpdateConfig
-from ai_foundry.projects.ai_updates.history import HistoryRepository
+from ai_foundry.projects.ai_updates.db.history import ReportHistoryStore
 from ai_foundry.projects.ai_updates.main import main
-from ai_foundry.projects.ai_updates.models import Paper, PaperSummary
+from ai_foundry.projects.ai_updates.db.models import Paper, PaperSummary
 from ai_foundry.projects.ai_updates.reports.markdown import ReportRenderer
 from ai_foundry.projects.ai_updates.sources.papers import ArxivSource
 from ai_foundry.projects.ai_updates.workflows.generate_update import UpdateWorkflow
@@ -72,7 +72,7 @@ class ResearchTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temporary:
             database_path: Path = Path(temporary) / "history.sqlite3"
             database: SQLiteDatabase = SQLiteDatabase(database_path)
-            history: HistoryRepository = HistoryRepository(database)
+            history: ReportHistoryStore = ReportHistoryStore(database)
             paper: Paper = ArxivSource(Mock()).parse(FIXTURE)[0]
             entry: PaperSummary = PaperSummary(paper, "Summary")
             database.begin()
@@ -85,7 +85,7 @@ class ResearchTests(unittest.TestCase):
             database.close()
             # Reopen and confirm persistence and lock exclusion.
             database = SQLiteDatabase(database_path)
-            history = HistoryRepository(database)
+            history = ReportHistoryStore(database)
             self.assertEqual(history.reported_ids(), {paper.identifier})
             other: SQLiteDatabase = SQLiteDatabase(database_path)
             other.connection.execute("PRAGMA busy_timeout = 0")

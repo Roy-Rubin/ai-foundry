@@ -6,7 +6,7 @@ import re
 import tempfile
 from pathlib import Path
 
-from ..models import PaperSummary
+from ..db.models import PaperSummary
 
 
 class ReportRenderer:

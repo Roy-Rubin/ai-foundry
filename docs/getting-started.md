@@ -29,6 +29,20 @@ existing reports. Errors return a nonzero exit status. HTTP retries are bounded
 to three attempts with at most 30 seconds of delay per retry. Overlapping runs
 using the same database wait up to five seconds for its write reservation.
 
+To run once from VS Code, open the repository folder, run `uv sync --locked`,
+and install the Microsoft Python and Python Debugger extensions. In **Run and
+Debug**, select **AI Updates: Run once** and press **F5** to run with breakpoints,
+or **Ctrl+F5** (**Control+F5** on macOS) to run without debugging. The launch
+configuration uses the repository's `.venv` interpreter and runs from the
+repository root. Each launch generates one update and exits.
+
+For live summaries, copy `.env.example` to `.env` and set `OPENAI_API_KEY` there,
+or provide it in VS Code's environment. The debugger loads `.env` automatically;
+this file is ignored by Git. Select **AI Updates: Run once (mock)** to run without
+model calls or an API key; this still fetches live arXiv metadata. To customize
+either run, add command-line options to its `args` array in
+[`.vscode/launch.json`](../.vscode/launch.json).
+
 View the mock HTML report over local HTTP.
 
 ```sh
